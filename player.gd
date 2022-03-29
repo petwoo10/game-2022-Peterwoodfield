@@ -5,106 +5,168 @@ export (int) var speed = 120
 export (int) var jumpspeed = -180
 export (int) var gravity = 400
 export (int) var rollspeed = 400
+export var is_attacking = false
 
 var velocity = Vector2.ZERO
+var is_rolling = false
 
 export (float) var friction = 10
 export (float) var acceleration = 25
 
-enum state {IDLE,ROLL,STARTJUMP,ATTACK,DEATH,CROUCH,CROUCHATTACK,HIT,CROUCHWALK,RUN,JUMPFALL,JUMP}
+#enum state {IDLE,ROLL,STARTJUMP,ATTACK,DEATH,CROUCH,CROUCHATTACK,HIT,CROUCHWALK,RUN,JUMPFALL,JUMP}
 
-onready var player_state = state.IDLE
+#onready var player_state = state.IDLE
+onready var state
+onready var state_machine = $AnimationTree.get("parameters/playback")
 
 func _ready():
-	$AnimationPlayer.play("idle")
+	state_machine.start("idle")
 	pass
 	
-func update_animation(anim):
-	if velocity.x < 0:
-		$AnimatedSprite.flip_h = true
-	elif velocity.x > 0:
-		$AnimatedSprite.flip_h = false
+#func update_animation(anim):
+#	if velocity.x < 0:
+#		$AnimatedSprite.flip_h = true
+#	elif velocity.x > 0:
+#		$AnimatedSprite.flip_h = false
 		
-	match(anim):
-		state.JUMPFALL:
-			$AnimationPlayer.play("jumpfall")
-		state.ATTACK:
-			$AnimationPlayer.play("attack")
-		state.ROLL:
-			$AnimationPlayer.play("roll")
-		state.CROUCH:
-			$AnimationPlayer.play("crouch")
-		state.CROUCHWALK:
-			$AnimationPlayer.play("crouchwalk")
-		state.CROUCHATTACK:
-			$AnimationPlayer.play("crouchattack")
-		state.RUN:
-			$AnimationPlayer.play("run")
-		state.HIT:
-			$AnimationPlayer.play("hit")
-		state.DEATH:
-			$AnimationPlayer.play("death")
-		state.IDLE:
-			$AnimationPlayer.play("idle")
-		state.JUMP:
-			$AnimationPlayer.play("jump")
+#	match(anim):
+#		state.JUMPFALL:
+#			$AnimationPlayer.play("jumpfall")
+#		state.ATTACK:
+#			$AnimationPlayer.play("attack")
+#			yield($AnimationPlayer,"animation_finished")
+#			player_state = state.IDLE
+#		state.ROLL:
+#			$AnimationPlayer.play("roll")
+#		state.CROUCH:
+#			$AnimationPlayer.play("crouch")
+#		state.CROUCHWALK:
+#			$AnimationPlayer.play("crouchwalk")
+#		state.CROUCHATTACK:
+#			$AnimationPlayer.play("crouchattack")
+#		state.RUN:
+#			$AnimationPlayer.play("run")
+#		state.HIT:
+#			$AnimationPlayer.play("hit")
+#		state.DEATH:
+#			$AnimationPlayer.play("death")
+#		state.IDLE:
+#			$AnimationPlayer.play("idle")
+#		state.JUMP:
+#			$AnimationPlayer.play("jump")
 			
 		
 	
-func handle_state(player_state):
-	match(player_state):
-		state.STARTJUMP:
-			velocity.y = jumpspeed
-	pass
+#func handle_state(player_state):
+#	match(player_state):
+#		state.STARTJUMP:
+#			velocity.y = jumpspeed
+#	pass
 	
 	
 func get_input():
-	var dir = Input.get_action_strength("right") - Input.get_action_strength("left")
-	if dir != 0:
-		velocity.x = move_toward(velocity.x, dir*speed, acceleration)
-	else:
-		velocity.x = move_toward(velocity.x, 0, friction)
+	print(is_attacking)
+	if is_rolling != true:
+		var dir = Input.get_action_strength("right") - Input.get_action_strength("left")
+		if dir != 0 and is_attacking == false:
+			velocity.x = move_toward(velocity.x, dir*speed, acceleration)
+		else:
+			velocity.x = move_toward(velocity.x, 0, friction)
 		
+	if  Input.is_action_just_pressed("jump") and is_on_floor() and state_machine.get_current_node() != "roll":
+		state_machine.travel("jump")
+		velocity.y = jumpspeed
+		
+	if Input.is_action_just_pressed("roll") and is_on_floor():
+		state_machine.travel("roll")
+	elif velocity.x !=0 and state_machine.get_current_node() != "roll":
+			state_machine.travel("run")
 	
+	if Input.is_action_just_pressed("attack"):
+		is_attacking = true
+		state_machine.travel("attack")
+		
+	#if Input.is_action_just_released("attack"):
+	#	state_machine.travel
 	
 	
 func _physics_process(delta):
+	var is_attacking = false
+	print(state_machine.get_current_node())
+	if state_machine.get_current_node() != "roll":
+		pass
+	#if state_machine. != "roll":
+	#	is_rolling = false
 	get_input()
-	print(is_on_floor())
+	#print(is_on_floor())
 	if velocity == Vector2.ZERO:
-		player_state = state.IDLE
-	if Input.is_action_just_pressed("jump") and is_on_floor():
-		player_state = state.STARTJUMP
-	elif velocity.x !=0:
-		player_state = state.RUN
-	
-		if velocity.x == 0:
-			player_state = state.IDLE
-		elif velocity.x != 0 and Input.is_action_just_pressed("roll"):
-			player_state = state.ROLL
-		elif velocity.x !=0:
-			player_state = state.RUN
+		state_machine.travel("idle")
+	#if Input.is_action_just_pressed("jump") and is_on_floor() and state_machine.get_current_node() != "roll":
+	#	state_machine.travel("jump")
+	#	velocity.y = jumpspeed
+	#elif velocity.x !=0 and state_machine.get_current_node() != "roll":
+	#	state_machine.travel("run")
+	#elif velocity.x != 0 and Input.is_action_just_pressed("roll") and is_on_floor():
+	#	state_machine.travel("roll")
+	#	if -30 <= velocity.x and velocity.x <= 30:
+	#		velocity.x = 0
+	#		state_machine.travel("idle")
+	#	elif velocity.x != 0 and Input.is_action_just_pressed("roll"):
+	#		state_machine.travel("roll")
+	#		
+	#	elif velocity.x !=0 and state_machine.get_current_node() != "roll":
+	#		state_machine.travel("run")
+			
+	#if state_machine.get_current_node() != "roll" and state_machine.get_current_node() != "attack":
+	#	get_input()
 		
-		if is_on_floor() and player_state != state.ROLL:
-			if Input.is_action_just_pressed("roll"):
-				velocity.y = jumpspeed
-				player_state
+	
+		
+		
+		#if is_on_floor() and player_state != state.ROLL:
+		#	if Input.is_action_just_pressed("jump"):
+		#		velocity.y = jumpspeed
+		#		player_state = state.JUMP
+				
+				
 		
 		
 	if not is_on_floor():
 		if velocity.y < 0:
-			player_state = state.JUMP
+			state_machine.travel("jump")
 		if velocity.y > 0:
-			player_state = state.JUMPFALL
+			state_machine.travel("jumpfall")
 			
 			
 			
 			
 			
-	handle_state(player_state)
-	update_animation(player_state)
+	#handle_state(player_state)
+	#update_animation()
+	
+	
+	
 	#set gravysty 
+	if is_attacking == true:
+		velocity.x = 0
+	
+	if velocity.x < 0:
+		$AnimatedSprite.flip_h = true
+	elif velocity.x > 0:
+		$AnimatedSprite.flip_h = false
 	velocity.y += gravity * delta
 	velocity = move_and_slide(velocity,Vector2.UP)
+	$AnimationTree["parameters/conditions/is attack"] = is_attacking
+
+	
+
+#func _on_AnimationPlayer_animation_finished(anim_name):
+#	if anim_name == "roll":
+#		player_state = state.IDLE
+#		is_rolling = false
 
 
+#func _on_AnimationPlayer_animation_started(anim_name):
+#	if anim_name == "roll":
+#		is_rolling = true
+		
