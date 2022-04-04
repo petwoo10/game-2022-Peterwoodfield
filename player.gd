@@ -65,13 +65,12 @@ func _ready():
 	
 	
 func get_input():
-	print(is_attacking)
-	if is_rolling != true:
-		var dir = Input.get_action_strength("right") - Input.get_action_strength("left")
-		if dir != 0 and is_attacking == false:
-			velocity.x = move_toward(velocity.x, dir*speed, acceleration)
-		else:
-			velocity.x = move_toward(velocity.x, 0, friction)
+	var	dir = Input.get_action_strength("right") - Input.get_action_strength("left")
+
+	if dir != 0 and is_attacking == false:
+		velocity.x = move_toward(velocity.x, dir*speed, acceleration)
+	else:
+		velocity.x = move_toward(velocity.x, 0, friction)
 		
 	if  Input.is_action_just_pressed("jump") and is_on_floor() and state_machine.get_current_node() != "roll":
 		state_machine.travel("jump")
@@ -79,22 +78,26 @@ func get_input():
 		
 	if Input.is_action_just_pressed("roll") and is_on_floor():
 		state_machine.travel("roll")
-	elif velocity.x !=0 and state_machine.get_current_node() != "roll":
-			state_machine.travel("run")
+	
+	elif velocity.x !=0 :#and state_machine.get_current_node() != "roll":
+		state_machine.travel("run")
+			
 	
 	if Input.is_action_just_pressed("attack"):
 		is_attacking = true
 		state_machine.travel("attack")
-		
+		#if -30 <= velocity.x and velocity.x <= 30:
+		#	velocity.x = 0
+		#	state_machine.travel("idle")
 	#if Input.is_action_just_released("attack"):
 	#	state_machine.travel
 	
 	
 func _physics_process(delta):
 	var is_attacking = false
-	print(state_machine.get_current_node())
+	#print(state_machine.get_current_node())
 	if state_machine.get_current_node() != "roll":
-		pass
+		is_rolling = false
 	#if state_machine. != "roll":
 	#	is_rolling = false
 	get_input()
@@ -160,7 +163,7 @@ func _physics_process(delta):
 
 	
 
-#func _on_AnimationPlayer_animation_finished(anim_name):
+#func _on_AnimationPlayer_animation_finished(state_machine):
 #	if anim_name == "roll":
 #		player_state = state.IDLE
 #		is_rolling = false
