@@ -94,7 +94,7 @@ func get_input():
 	
 	
 func _physics_process(delta):
-	var is_attacking = false
+	is_attacking = false
 	#print(state_machine.get_current_node())
 	if state_machine.get_current_node() != "roll":
 		is_rolling = false
