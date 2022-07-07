@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/background4b.png-c2b13be6c3a4ea54a408b094a5aacf94.stex"
+path="res://.import/Cool Text - Save Her 414370652825840.png-26806fbc6e186eefa44fa2dba4eb6faf.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://background4b.png"
-dest_files=[ "res://.import/background4b.png-c2b13be6c3a4ea54a408b094a5aacf94.stex" ]
+source_file="res://Cool Text - Save Her 414370652825840.png"
+dest_files=[ "res://.import/Cool Text - Save Her 414370652825840.png-26806fbc6e186eefa44fa2dba4eb6faf.stex" ]
 
 [params]
 
@@ -20,7 +20,7 @@ compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
-flags/filter=false
+flags/filter=true
 flags/mipmaps=false
 flags/anisotropic=false
 flags/srgb=2
@@ -31,5 +31,5 @@ process/invert_color=false
 process/normal_map_invert_y=false
 stream=false
 size_limit=0
-detect_3d=false
+detect_3d=true
 svg/scale=1.0
