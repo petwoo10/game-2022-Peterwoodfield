@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/Rejoicing.mp3-2aa8799ecd7006d6c52773084b116319.mp3str"
+
+[deps]
+
+source_file="res://soudn/Rejoicing.mp3"
+dest_files=[ "res://.import/Rejoicing.mp3-2aa8799ecd7006d6c52773084b116319.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

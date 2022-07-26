@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/Gjallar.mp3-f96aff6301830820c83250dd7ec5aa23.mp3str"
+
+[deps]
+
+source_file="res://soudn/Gjallar.mp3"
+dest_files=[ "res://.import/Gjallar.mp3-f96aff6301830820c83250dd7ec5aa23.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

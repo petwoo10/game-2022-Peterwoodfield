@@ -11,8 +11,12 @@ config_version=4
 [application]
 
 config/name="Godot 2022 Game"
-run/main_scene="res://map.tscn"
+run/main_scene="res://menu.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Backgound="*res://backgound.tscn"
 
 [display]
 
