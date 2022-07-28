@@ -83,6 +83,7 @@ func get_input():
 		state_machine.travel("run")
 			
 	
+		
 	if Input.is_action_just_pressed("attack"):
 		is_attacking = true
 		state_machine.travel("attack")
@@ -102,8 +103,12 @@ func _physics_process(delta):
 	#	is_rolling = false
 	get_input()
 	#print(is_on_floor())
-	if velocity == Vector2.ZERO:
+	if velocity == Vector2.ZERO and Input.is_action_pressed("crouch"):
+		state_machine.travel("crouch")
+	elif velocity == Vector2.ZERO:
 		state_machine.travel("idle")
+		
+		
 	#if Input.is_action_just_pressed("jump") and is_on_floor() and state_machine.get_current_node() != "roll":
 	#	state_machine.travel("jump")
 	#	velocity.y = jumpspeed
