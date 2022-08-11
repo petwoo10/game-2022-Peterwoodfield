@@ -6,10 +6,11 @@ export (int) var jumpspeed = -180
 export (int) var gravity = 400
 export (int) var rollspeed = 400
 export var is_attacking = false
+export var is_currently_attacking = false
 
 var velocity = Vector2.ZERO
 var is_rolling = false
-
+var crouching = false
 export (float) var friction = 10
 export (float) var acceleration = 25
 
@@ -21,8 +22,16 @@ onready var state_machine = $AnimationTree.get("parameters/playback")
 
 func _ready():
 	state_machine.start("idle")
-	pass
 	
+
+#func _on_AnimationPlayer_animation_finished(state_machine):
+	#if state_machine == "attack":
+		#is_attacking = false
+		#state_machine.travel("jump")
+#	if anim_name == "roll":
+#		player_state = state.IDLE
+#		is_rolling = false
+
 #func update_animation(anim):
 #	if velocity.x < 0:
 #		$AnimatedSprite.flip_h = true
@@ -65,12 +74,17 @@ func _ready():
 	
 	
 func get_input():
-	var	dir = Input.get_action_strength("right") - Input.get_action_strength("left")
 
+	var dir = Input.get_action_strength("right") - Input.get_action_strength("left")
+	
+#	if is_currently_attacking == true:
+#		velocity.x = 0
 	if dir != 0 and is_attacking == false:
+
 		velocity.x = move_toward(velocity.x, dir*speed, acceleration)
+		
 	else:
-		velocity.x = move_toward(velocity.x, 0, friction)
+		velocity.x = 0#move_toward(0, 0, friction)
 		
 	if  Input.is_action_just_pressed("jump") and is_on_floor() and state_machine.get_current_node() != "roll":
 		state_machine.travel("jump")
@@ -80,13 +94,18 @@ func get_input():
 		state_machine.travel("roll")
 	
 	elif velocity.x !=0 :#and state_machine.get_current_node() != "roll":
-		state_machine.travel("run")
+		if not crouching : state_machine.travel("run")
+		else: state_machine.travel("crouchwalk")
 			
 	
 		
-	if Input.is_action_just_pressed("attack"):
-		is_attacking = true
+	if Input.is_action_just_pressed("attack"): #and velocity.x ==0:
 		state_machine.travel("attack")
+		if crouching == true and Input.is_action_just_pressed("attack"):
+			state_machine.travel("crouchattack")
+			
+			
+	
 		#if -30 <= velocity.x and velocity.x <= 30:
 		#	velocity.x = 0
 		#	state_machine.travel("idle")
@@ -95,7 +114,9 @@ func get_input():
 	
 	
 func _physics_process(delta):
-	is_attacking = false
+	
+		
+	
 	#print(state_machine.get_current_node())
 	if state_machine.get_current_node() != "roll":
 		is_rolling = false
@@ -103,11 +124,15 @@ func _physics_process(delta):
 	#	is_rolling = false
 	get_input()
 	#print(is_on_floor())
-	if velocity == Vector2.ZERO and Input.is_action_pressed("crouch"):
+	if Input.is_action_just_pressed("crouch"):
 		state_machine.travel("crouch")
+		crouching = true
 	elif velocity == Vector2.ZERO:
-		state_machine.travel("idle")
-		
+		if not crouching : state_machine.travel("idle")
+		else: state_machine.travel("crouch")
+	
+	if Input.is_action_just_released("crouch"):
+		crouching = false
 		
 	#if Input.is_action_just_pressed("jump") and is_on_floor() and state_machine.get_current_node() != "roll":
 	#	state_machine.travel("jump")
@@ -155,26 +180,28 @@ func _physics_process(delta):
 	
 	
 	#set gravysty 
-	if is_attacking == true:
-		velocity.x = 0
+	#if is_attacking == true:
+	#	velocity.x = 0
 	
 	if velocity.x < 0:
 		$AnimatedSprite.flip_h = true
 	elif velocity.x > 0:
 		$AnimatedSprite.flip_h = false
+	
+	#if is_attacking == true:
+	#	velocity.x = 0
+	
 	velocity.y += gravity * delta
 	velocity = move_and_slide(velocity,Vector2.UP)
 	$AnimationTree["parameters/conditions/is attack"] = is_attacking
 
 	
 
-#func _on_AnimationPlayer_animation_finished(state_machine):
-#	if anim_name == "roll":
-#		player_state = state.IDLE
-#		is_rolling = false
+
 
 
 #func _on_AnimationPlayer_animation_started(anim_name):
 #	if anim_name == "roll":
 #		is_rolling = true
 		
+
