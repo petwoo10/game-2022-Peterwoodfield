@@ -5,9 +5,9 @@ export (int) var speed = 120
 export (int) var jumpspeed = -180
 export (int) var gravity = 400
 export (int) var rollspeed = 400
-export var is_attacking = false
-export var is_currently_attacking = false
+var is_attacking = false
 
+var direction = 36
 var velocity = Vector2.ZERO
 var is_rolling = false
 var crouching = false
@@ -22,7 +22,7 @@ onready var state_machine = $AnimationTree.get("parameters/playback")
 
 func _ready():
 	state_machine.start("idle")
-	
+	pass
 
 #func _on_AnimationPlayer_animation_finished(state_machine):
 	#if state_machine == "attack":
@@ -74,13 +74,13 @@ func _ready():
 	
 	
 func get_input():
-
-	var dir = Input.get_action_strength("right") - Input.get_action_strength("left")
+	var dir = 0
+	if not is_attacking:
+		dir = Input.get_action_strength("right") - Input.get_action_strength("left")
 	
 #	if is_currently_attacking == true:
 #		velocity.x = 0
-	if dir != 0 and is_attacking == false:
-
+	if dir != 0:
 		velocity.x = move_toward(velocity.x, dir*speed, acceleration)
 		
 	else:
@@ -99,7 +99,9 @@ func get_input():
 			
 	
 		
-	if Input.is_action_just_pressed("attack"): #and velocity.x ==0:
+	if Input.is_action_just_pressed("attack") and velocity.x == 0:
+		print("sgfg")
+		is_attacking = true
 		state_machine.travel("attack")
 		if crouching == true and Input.is_action_just_pressed("attack"):
 			state_machine.travel("crouchattack")
@@ -185,8 +187,10 @@ func _physics_process(delta):
 	
 	if velocity.x < 0:
 		$AnimatedSprite.flip_h = true
+		$"hit area/hit".position.x = -direction
 	elif velocity.x > 0:
 		$AnimatedSprite.flip_h = false
+		$"hit area/hit".position.x = direction
 	
 	#if is_attacking == true:
 	#	velocity.x = 0
@@ -205,3 +209,8 @@ func _physics_process(delta):
 #		is_rolling = true
 		
 
+
+
+func _on_hit_area_body_entered(body):
+	if body.is_in_group("enimey"):
+		pass

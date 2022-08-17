@@ -1,4 +1,4 @@
-[gd_scene load_steps=139 format=2]
+[gd_scene load_steps=140 format=2]
 
 [ext_resource path="res://player.gd" type="Script" id=1]
 [ext_resource path="res://Colour1/NoOutline/120x80_PNGSheets/_Idle.png" type="Texture" id=2]
@@ -63,6 +63,18 @@ tracks/3/keys = {
 "update": 0,
 "values": [ Vector2( 4, -1 ) ]
 }
+tracks/4/type = "value"
+tracks/4/path = NodePath("../hit area/hit:disabled")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
 
 [sub_resource type="Animation" id=59]
 resource_name = "attack"
@@ -111,6 +123,18 @@ tracks/3/loop_wrap = true
 tracks/3/imported = false
 tracks/3/enabled = true
 tracks/3/keys = {
+"times": PoolRealArray( 0, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("../hit area/hit:disabled")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
 "times": PoolRealArray( 0, 0.4 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
@@ -668,7 +692,7 @@ switch_mode = 2
 
 [sub_resource type="AnimationNodeStateMachine" id=131]
 states/attack/node = SubResource( 86 )
-states/attack/position = Vector2( 230, 399 )
+states/attack/position = Vector2( 242, 415 )
 states/crouch/node = SubResource( 87 )
 states/crouch/position = Vector2( -2, 511 )
 states/crouchattack/node = SubResource( 88 )
@@ -680,7 +704,7 @@ states/death/position = Vector2( 445, 2 )
 states/hit/node = SubResource( 91 )
 states/hit/position = Vector2( 311, -157 )
 states/idle/node = SubResource( 92 )
-states/idle/position = Vector2( 56, 121 )
+states/idle/position = Vector2( 56, 120 )
 states/jump/node = SubResource( 93 )
 states/jump/position = Vector2( 242, -443 )
 states/jumpfall/node = SubResource( 94 )
@@ -691,7 +715,7 @@ states/run/node = SubResource( 96 )
 states/run/position = Vector2( 971, 73 )
 transitions = [ "idle", "run", SubResource( 97 ), "run", "idle", SubResource( 98 ), "idle", "attack", SubResource( 99 ), "attack", "run", SubResource( 100 ), "run", "attack", SubResource( 101 ), "attack", "idle", SubResource( 102 ), "idle", "crouch", SubResource( 103 ), "crouch", "crouchwalk", SubResource( 104 ), "crouchwalk", "crouch", SubResource( 105 ), "crouch", "idle", SubResource( 106 ), "crouch", "crouchattack", SubResource( 107 ), "crouchattack", "crouch", SubResource( 108 ), "crouchwalk", "crouchattack", SubResource( 109 ), "crouchattack", "crouchwalk", SubResource( 110 ), "idle", "death", SubResource( 111 ), "run", "death", SubResource( 112 ), "run", "roll", SubResource( 113 ), "roll", "run", SubResource( 114 ), "roll", "idle", SubResource( 115 ), "idle", "roll", SubResource( 116 ), "idle", "jump", SubResource( 117 ), "jump", "jumpfall", SubResource( 118 ), "jumpfall", "idle", SubResource( 119 ), "jumpfall", "run", SubResource( 120 ), "run", "jump", SubResource( 121 ), "idle", "hit", SubResource( 122 ), "run", "hit", SubResource( 123 ), "hit", "death", SubResource( 124 ), "hit", "idle", SubResource( 125 ), "hit", "run", SubResource( 126 ), "crouch", "hit", SubResource( 127 ), "hit", "crouch", SubResource( 128 ), "crouchwalk", "hit", SubResource( 129 ), "hit", "crouchwalk", SubResource( 130 ) ]
 start_node = "idle"
-graph_offset = Vector2( -531, -550.488 )
+graph_offset = Vector2( -271, 45.9111 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=132]
 
@@ -1021,6 +1045,9 @@ animations = [ {
 "speed": 5.0
 } ]
 
+[sub_resource type="RectangleShape2D" id=133]
+extents = Vector2( 16, 20.5 )
+
 [node name="player" type="KinematicBody2D"]
 script = ExtResource( 1 )
 
@@ -1060,5 +1087,12 @@ frames = SubResource( 57 )
 animation = "idle "
 playing = true
 
+[node name="hit area" type="Area2D" parent="."]
+
+[node name="hit" type="CollisionShape2D" parent="hit area"]
+position = Vector2( 36, -0.5 )
+shape = SubResource( 133 )
+
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
 [connection signal="animation_started" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_started"]
+[connection signal="body_entered" from="hit area" to="." method="_on_hit_area_body_entered"]
