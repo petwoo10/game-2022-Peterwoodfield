@@ -3,6 +3,7 @@ export var is_attacking = false
 var is_moving = true
 var staying = false 
 var health = 100
+var damage = 50
 var attack = 20 
 const UP = Vector2(0, -1)
 const gravtiy = 10
@@ -14,7 +15,8 @@ onready var player = get_node("root/map/player")
 onready var edge_detector = $RayCast2D
 var direction = 1 
 var in_area = false
-
+var is_dead = false
+var hit = false
 func _ready():
 	edge_detector.enabled = true
 	
@@ -102,6 +104,20 @@ func _on_hit_attack_body_exited(body):
 		in_area = false
 		staying = false
 
-
-
+func dead():
+	is_dead = true
+	velocity = Vector2(0,0)
+	$AnimationPlayer.play("death")
+	$CollisionShape2D.queue_free()
+	
+func deal_damage():
+	health-=damage
+	if health <1:
+		dead()
+	else:
+		$AnimationPlayer.play("hit")
+		hit = true
+		yield(get_tree().create_timer(0.4),"timeout")
+		hit= false
+		
 	

@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=2]
+[gd_scene load_steps=47 format=2]
 
 [ext_resource path="res://Monsters_Creatures_Fantasy/Skeleton/Shield.png" type="Texture" id=1]
 [ext_resource path="res://Monsters_Creatures_Fantasy/Skeleton/Idle.png" type="Texture" id=2]
@@ -240,6 +240,46 @@ tracks/3/keys = {
 "values": [ "death" ]
 }
 
+[sub_resource type="Animation" id=40]
+resource_name = "hit"
+length = 0.365
+tracks/0/type = "value"
+tracks/0/path = NodePath("enimy:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("enimy:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("enimy:animation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "hit" ]
+}
+
 [sub_resource type="Animation" id=33]
 resource_name = "moving"
 length = 0.4
@@ -470,6 +510,7 @@ anims/IDLE = SubResource( 31 )
 anims/RESET = SubResource( 38 )
 anims/attack = SubResource( 35 )
 anims/death = SubResource( 34 )
+anims/hit = SubResource( 40 )
 anims/moving = SubResource( 33 )
 
 [node name="enimy" type="AnimatedSprite" parent="."]

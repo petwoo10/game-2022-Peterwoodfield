@@ -6,7 +6,7 @@ export (int) var jumpspeed = -180
 export (int) var gravity = 400
 export (int) var rollspeed = 400
 var is_attacking = false
-
+var damage = 10
 var direction = 36
 var velocity = Vector2.ZERO
 var is_rolling = false
@@ -212,5 +212,5 @@ func _physics_process(delta):
 
 
 func _on_hit_area_body_entered(body):
-	if body.is_in_group("enimey"):
+	if body.is_in_group("enimey") and is_attacking == true:
 		pass
