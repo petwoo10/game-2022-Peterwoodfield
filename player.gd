@@ -213,4 +213,4 @@ func _physics_process(delta):
 
 func _on_hit_area_body_entered(body):
 	if body.is_in_group("enimey") and is_attacking == true:
-		pass
+		body.deal_damage()
