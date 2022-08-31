@@ -89,6 +89,7 @@ func _on_Area2D_body_entered(body):
 
 func _on_hit_attack_body_entered(body):
 	if body.is_in_group("Player"):
+		body.deal_damage()
 		is_moving = false
 		in_area = true
 		staying = true

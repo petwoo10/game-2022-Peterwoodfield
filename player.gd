@@ -5,8 +5,10 @@ export (int) var speed = 120
 export (int) var jumpspeed = -180
 export (int) var gravity = 400
 export (int) var rollspeed = 400
+var health = 100
+var is_dead = false
 var is_attacking = false
-var damage = 10
+var damage = 50
 var direction = 36
 var velocity = Vector2.ZERO
 var is_rolling = false
@@ -200,8 +202,14 @@ func _physics_process(delta):
 	$AnimationTree["parameters/conditions/is attack"] = is_attacking
 
 	
-
-
+func dead():
+	is_dead = true
+	get_tree().change_scene("res://menu.tscn")
+	
+func deal_damage():
+	health-=damage
+	if health <1:
+		dead()
 
 
 #func _on_AnimationPlayer_animation_started(anim_name):
