@@ -210,6 +210,7 @@ func deal_damage():
 	health-=damage
 	if health <1:
 		dead()
+		get_tree().change_scene("res://lose.tscn")
 
 
 #func _on_AnimationPlayer_animation_started(anim_name):
