@@ -26,7 +26,7 @@ func _physics_process(delta):
 	print(in_area)
 	
 
-
+# flip sprite and moving
 	if in_area == false and is_attacking == false and staying == false:
 		velocity.x = speed * direction
 	else:
@@ -54,7 +54,7 @@ func _physics_process(delta):
 		yield (get_node("AnimationPlayer"), "animation_finished")
 		#is_attacking = false
 	
-	
+	#wall or leage
 	if not edge_detector.is_colliding():
 		$hit_attack/attack.position.x *= -1
 		direction *= -1
@@ -67,7 +67,7 @@ func _physics_process(delta):
 		edge_detector.position.x *= -1 
 		$hit_attack/attx.position.x *= -1 
 
-
+#player 
 func _on_Area2D_body_entered(body):
 	if body.is_in_group("Player"):
 		if body.global_position.x < global_position.x:
@@ -85,7 +85,7 @@ func _on_Area2D_body_entered(body):
 		pass
 		
 
-
+#making endning attack damage
 
 func _on_hit_attack_body_entered(body):
 	if body.is_in_group("Player"):
@@ -99,18 +99,18 @@ func _on_hit_attack_body_entered(body):
 		#is_attacking = false
 	
 
-
+# if they are in 
 func _on_hit_attack_body_exited(body):
 	if body.is_in_group("Player"):
 		in_area = false
 		staying = false
-
+#dying
 func dead():
 	is_dead = true
 	velocity = Vector2(0,0)
 	$AnimationPlayer.play("death")
 	$CollisionShape2D.queue_free()
-	
+	#taking damage 
 func deal_damage():
 	health-=damage
 	if health <1:
