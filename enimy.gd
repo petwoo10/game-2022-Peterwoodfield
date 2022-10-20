@@ -67,7 +67,7 @@ func _physics_process(delta):
 		edge_detector.position.x *= -1 
 		$hit_attack/attx.position.x *= -1 
 
-#player 
+#where the eneimy is facing and the hit and area boxs face and to the player
 func _on_Area2D_body_entered(body):
 	if body.is_in_group("Player"):
 		if body.global_position.x < global_position.x:
@@ -99,18 +99,18 @@ func _on_hit_attack_body_entered(body):
 		#is_attacking = false
 	
 
-# if they are in 
+# if they are in or not 
 func _on_hit_attack_body_exited(body):
 	if body.is_in_group("Player"):
 		in_area = false
 		staying = false
-#dying
+#dying antimiton 
 func dead():
 	is_dead = true
 	velocity = Vector2(0,0)
 	$AnimationPlayer.play("death")
 	$CollisionShape2D.queue_free()
-	#taking damage 
+	#taking damage  and diying 
 func deal_damage():
 	health-=damage
 	if health <1:
